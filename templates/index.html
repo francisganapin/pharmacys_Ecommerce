@@ -1,0 +1,208 @@
+
+
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: sans-serif;
+            background-color: lightblue;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .dt-input {
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+        }
+
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 90%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .styled-table {
+            border-collapse: collapse;
+            width: 100%;
+            min-width: 600px;
+            font-size: 0.9em;
+        }
+
+        .styled-table thead th {
+            position: sticky;
+            top: 0;
+            background-color: #009879;
+            color: #ffffff;
+            z-index: 1;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 12px 15px;
+        }
+
+        .styled-table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: bisque;
+        }
+
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+
+        .styled-table tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+    <title>Styled Table</title>
+</head>
+
+  <!-- Navbar -->
+  <div id="navbar"></div>
+
+<body>
+
+<div class="container">
+
+    <input type="text" class="dt-input" id="myInput" onkeyup="myFunction()" placeholder="Search for names...">
+    <div class="table-container">
+        <table id="example" class="styled-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Item Code</th>
+                    <th>Name</th>
+                    <th>UOM</th>
+                    <th>Warehouse</th>
+                    <th>Purchase Price</th>
+                    <th>Sale Price</th>
+                    <th>Supplier</th>
+                    <th>Batch Number</th>
+                    <th>Expiration</th>
+                    <th>Reorder Level</th>
+                    <th>Quantity In</th>
+                    <th>Quantity Out</th>
+                    <th>Total</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for item in result %}
+            <tr class="active-row">
+                <td>{{ item[0] }}</td>
+                <td>{{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
+                <td>{{ item[3] }}</td>
+                <td>{{ item[4] }}</td>
+                <td>{{ item[5] }}</td>
+                <td>{{ item[6] }}</td>
+                <td>{{ item[7] }}</td>
+                <td>{{ item[8] }}</td>
+                <td>{{ item[9] }}</td>
+                <td>{{ item[10] }}</td>
+                <td>{{ item[11] }}</td>
+                <td>{{ item[12] }}</td>
+                <td>{{ item[13] }}</td>
+                <td>{{ item[14] }}</td>
+                <td>{{ item[15] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="16" class="text-center">No items found.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
+
+<!---show navbar-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('/navbar')
+          .then(response => response.text())
+          .then(data => {
+            document.getElementById('navbar').innerHTML = data;
+          });
+    });
+</script>  
+
+
+
+
+
+    <script>
+ 
+
+    function myFunction() {
+    // Declare variables
+    var input, filter, table, rows, i, txtValue;
+    input = document.getElementById('myInput');
+    filter = input.value.toUpperCase();
+    table = document.getElementById("example");
+    rows = table.getElementsByTagName('tr');
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 1; i < rows.length; i++) { // Start at 1 to skip the header row
+      let firstItem = rows[i].getElementsByTagName("td")[3]; // First Name is in the 5th column
+      
+      if (firstItem) {
+        let itemNameValue = firstItem.textContent || firstItem.innerText;
+        txtValue = itemNameValue.toUpperCase(); // Combine first and last names
+
+        if (txtValue.indexOf(filter) > -1) {
+          rows[i].style.display = "";
+        } else {
+          rows[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+
+    </script>
+
