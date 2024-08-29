@@ -22,10 +22,7 @@ def update_table():
         current_qty = result2[0]  # Fetch the current quantity from the result
 
         if in_qty_in > current_qty:
-            cursor.execute(
-                'UPDATE inventory SET in_qty = %s, remarks = %s WHERE item_code = %s',
-                (in_qty_in, Restocked, item_code_in)
-            )
+            cursor.execute('UPDATE inventory SET in_qty = %s, remarks = %s WHERE item_code = %s',(in_qty_in, Restocked, item_code_in))
             connection.commit()
             print(f'Updated item_code: {item_code_in} to new quantity: {in_qty_in} and restocked')
             message = f'Successfully updated item_code {item_code_in} with new quantity {in_qty_in}.'
