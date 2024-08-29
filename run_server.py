@@ -26,6 +26,15 @@ def navbar():
 
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+
+
+
+
 @app.route('/item')
 def hello():
     try:
@@ -45,8 +54,11 @@ def hello():
 
 @app.route('/update',  methods=['GET', 'POST'])
 def update_table():
+
     item_code_in = request.form.get('item_code')
-    in_qty_in = request.form.get('in_qty')
+    in_qty_in = int(request.form.get('in_qty'))  # Convert to integer
+    Restocked = 'Restocked' 
+    Destocked = 'Destocked'
 
     try:
         connection = mysql.connector.connect(**DatabaseConfig.config_server)
@@ -57,13 +69,26 @@ def update_table():
         if not result:
             print(f'{item_code_in} does not exist')
             return render_template('update.html', message=f'{item_code_in} does not exist')
+        
+        cursor.execute('SELECT in_qty FROM inventory WHERE item_code = %s',(item_code_in,))
+        result2 = cursor.fetchone()
+
+        current_qty = result2[0]
 
 
-        cursor.execute('UPDATE inventory SET in_qty = %s WHERE item_code =%s',(in_qty_in,item_code_in,))
-        connection.commit()
+        if in_qty_in > current_qty:
+            cursor.execute('UPDATE inventory SET in_qty = %s, remarks = %s WHERE item_code = %s', (in_qty_in, Restocked, item_code_in))
+            connection.commit()
+            print(f'Updated item_code: {item_code_in} to new quantity: {in_qty_in} and restocked')
+            message = f'Successfully updated item_code {item_code_in} with new quantity {in_qty_in}.'
+        else:
+            cursor.execute('UPDATE inventory SET in_qty = %s, remarks = %s WHERE item_code = %s', (in_qty_in,Destocked, item_code_in))
+            connection.commit()
+            print(f'Updated item_code: {item_code_in} to new quantity: {in_qty_in} and destocked')
+            message = f'Successfully updated item_code {item_code_in} with new quantity {in_qty_in}.'
 
-        print(f'Updated item_code: {item_code_in} to new quantity: {in_qty_in}')
-        message = f'Successfully updated item_code {item_code_in} with new quantity {in_qty_in}.'
+
+        
 
     except mysql.connector.Error as e:
             print(f'MySQL error: {e}')
@@ -73,6 +98,39 @@ def update_table():
         connection.close()
 
     return render_template('update.html',message=message)
+
+
+
+
+@app.route('/delete', methods=['GET','POST'])
+def delete_table():
+    item_code_in = request.form.get('item_code')
+    try:
+        connection = mysql.connector.connect(**DatabaseConfig.config_server)
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM inventory where item_code =%s',(item_code_in,))
+        result = cursor.fetchone()
+
+        if not result:
+            print(f'{item_code_in} does not exist')
+            return render_template('delete.html', message=f'{item_code_in} does not exist')
+        
+        cursor.execute('DELETE FROM inventory WHERE item_code =%s',(item_code_in,))
+        connection.commit()
+
+        print(f'Deleted item_code: {item_code_in}')
+        message = f'Successfully Deleted item_code {item_code_in}.'
+    except mysql.connector.Error as e:
+            print(f'MySQL error: {e}')
+            message=f'error message'
+    finally:
+        cursor.close()
+        connection.close()
+
+    return render_template('delete.html',message=message)
+
+
+
 
 
 

@@ -1,2 +1,5 @@
+8/29/2024
+	- if we update the stock we remarks the Restocked else if update is lower we will say destock
+
 AUG 25 2024
     -FETCH DATA ON PHARMACYS 
