@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flash Sale and Categories</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    .header {
+      background-color: #f57224;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header input[type="text"] {
+      width: 300px;
+      padding: 5px;
+      border: none;
+      border-radius: 3px;
+    }
+
+    .header img {
+      height: 30px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 10px;
+    }
+
+    .flash-sale, .categories {
+      margin-bottom: 20px;
+    }
+
+    .flash-sale h2, .categories h2 {
+      margin: 0 0 15px;
+    }
+
+    .flash-sale-items, .categories-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .card {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: calc(20% - 10px);
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    .card h3 {
+      font-size: 14px;
+      margin: 10px 0;
+      color: #333;
+    }
+
+    .card .price {
+      color: #f57224;
+      font-weight: bold;
+    }
+
+    .categories-items .card {
+      width: calc(12% - 10px);
+    }
+
+    .categories-items .card h3 {
+      font-size: 12px;
+    }
+
+    .pagination {
+  text-align: center;
+}
+
+.pagination {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="logo.png" alt="Lazada Logo">
+    <input type="text" placeholder="Search in Lazada">
+  </div>
+
+
+  <div class="container">
+    <!-- Flash Sale Section -->
+    <div class="flash-sale">
+      <h2>Flash Sale</h2>
+      <div class="flash-sale-items">
+        {% for item in items %}
+            <div class="card">
+                <img src="https://via.placeholder.com/150" alt="Item">
+                <h3>{{item[3]}}</h3>
+                <p class="price">₱{{item[6]}}</p>
+            </div> 
+            {%else%}
+            {%endfor%}
+      </div> 
+      </div>
+      </div>
+   
+      <ul class="pagination">
+        {% for p in range(1, total_pages + 1) %}
+        
+            <a href="?page={{ p }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
+
+        {% endfor %}
+        </ul>
+
+</body>
+</html>

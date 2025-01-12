@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import mysql.connector
 app = Flask(__name__)
 from server_side.connect_mysql_server import DatabaseConfig
+import math
 
 
 
@@ -34,12 +35,24 @@ def hello():
         cursor.execute('SELECT * FROM inventory')
         result = cursor.fetchall()
 
+        per_page = 12
+        page = request.args.get('page',1,type=int)
+        total_pages = math.ceil(len(result)/per_page)
+
+        start = (page -1) * per_page
+        end = start + per_page
+        items = result[start:end]
+
     except mysql.connector.Error as e:
             print(f'MySQL error: {e}')
     finally:
         print('cute')
 
-    return render_template('index.html',result=result)
+    return render_template('buyers.html',
+                           items=items,
+                           page=page,
+                           total_pages=total_pages,
+                           )
 
 
 
