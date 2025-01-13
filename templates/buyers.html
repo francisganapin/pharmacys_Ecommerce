@@ -121,27 +121,31 @@
 </head>
 <body>
   <div class="header">
-    <img src="logo.png" alt="Lazada Logo">
+    <img src="logo.png" alt="Largarda Pharamacy">
     <input type="text" placeholder="Search in Lazada">
   </div>
 
 
-  <div class="container">
-    <!-- Flash Sale Section -->
-    <div class="flash-sale">
-      <h2>Flash Sale</h2>
-      <div class="flash-sale-items">
-        {% for item in items %}
-            <div class="card">
-                <img src="https://via.placeholder.com/150" alt="Item">
-                <h3>{{item[3]}}</h3>
-                <p class="price">₱{{item[6]}}</p>
-            </div> 
-            {%else%}
-            {%endfor%}
-      </div> 
-      </div>
-      </div>
+<div class="container">
+        <input type="text" id="search_name" placeholder="Search items..." onkeyup="filterItems()">
+      <!-- Flash Sale Section -->
+          <div class="flash-sale">
+            <h2>Flash Sale</h2>
+              <div class="flash-sale-items">
+                {% for item in items %}
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" alt="Item">
+                        <h3>{{item[3]}}</h3>
+                        <p class="price">₱{{item[6]}}</p>
+                    </div> 
+                    {%else%}
+                    <div class="card">
+                      <p>no item found</p>
+                    </div> 
+                    {%endfor%}
+              </div> 
+          </div>
+  </div>
    
       <ul class="pagination">
         {% for p in range(1, total_pages + 1) %}
@@ -153,3 +157,30 @@
 
 </body>
 </html>
+
+
+
+<script>
+  
+  function filterItems() {
+      // Get the search input value and convert to lowercase
+      const searchInput = document.getElementById('search_name').value.toLowerCase();
+
+      // Get all elements with the class name 'card'
+      const items = document.getElementsByClassName('card');
+
+      // Convert the HTMLCollection to an array and iterate through each item
+      Array.from(items).forEach(item => {
+          // Get the text content of the first <h3> element inside the item
+          const itemName = item.getElementsByTagName('h3')[0].textContent.toLowerCase();
+
+          // Compare the item name with the search input
+          if (itemName.includes(searchInput)) {
+              item.style.display = 'block'; // Show the item if it matches
+          } else {
+              item.style.display = 'none'; // Hide the item if it doesn't match
+          }
+      });
+  }
+
+</script>
